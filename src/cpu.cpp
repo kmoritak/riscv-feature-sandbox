@@ -72,15 +72,11 @@ void CPU::execute(uint32_t inst) {
         case 0x6F: // JAL
         {
             // Sign extend the 21-bit immediate
-            int32_t imm = (static_cast<int32_t>(inst) >> 31) << 20 |
+            // shift arithmetic right from 31 to 20 maintains sign bits [31:21] -> [31:20]
+            int32_t imm = (static_cast<int32_t>(inst & 0x80000000) >> 11) | // bit 20 (sign bit) extended
                           (((inst >> 12) & 0xFF) << 12) |
                           (((inst >> 20) & 0x1) << 11) |
                           (((inst >> 21) & 0x3FF) << 1);
-            // shift arithmetic right from 31 to 20 maintains sign bits [31:21] -> [31:20]
-            imm = (static_cast<int32_t>(inst & 0x80000000) >> 11) | // bit 20 (sign bit) extended
-                  (((inst >> 12) & 0xFF) << 12) |
-                  (((inst >> 20) & 0x1) << 11) |
-                  (((inst >> 21) & 0x3FF) << 1);
 
             if (rd != 0) regs[rd] = pc;
             pc = (pc - 4) + imm;
