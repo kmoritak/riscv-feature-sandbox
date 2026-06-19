@@ -3,11 +3,12 @@
 
 #include <cstdint>
 #include <array>
+#include <string>
 #include "memory.h"
 
 class CPU {
 public:
-    CPU(Memory& memory);
+    CPU(Memory& memory, const std::string& isa);
 
     void reset();
     void step();
@@ -20,6 +21,7 @@ private:
     uint32_t pc;
     std::array<uint32_t, 32> regs;
     Memory& mem;
+    std::string current_isa;
 
     void execute(uint32_t inst);
 };

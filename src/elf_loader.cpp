@@ -4,7 +4,7 @@
 #include <iostream>
 #include <cstring>
 
-bool ELFLoader::load(const std::string& filename, Memory& mem, uint32_t& entry_point) {
+bool ELFLoader::load(const std::string& filename, Memory& mem, uint32_t& entry_point, const std::string& expected_isa) {
     std::ifstream file(filename, std::ios::binary);
     if (!file) {
         std::cerr << "Error: Could not open ELF file " << filename << std::endl;
@@ -24,9 +24,23 @@ bool ELFLoader::load(const std::string& filename, Memory& mem, uint32_t& entry_p
         return false;
     }
 
-    // Verify it's a 32-bit executable for RISC-V
-    if (ehdr.e_ident[EI_CLASS] != ELFCLASS32 || ehdr.e_machine != EM_RISCV) {
-        std::cerr << "Error: Not a 32-bit RISC-V ELF file" << std::endl;
+    // Check basic architecture match for ISA
+    if (expected_isa.find("RV32") != std::string::npos) {
+        if (ehdr.e_ident[EI_CLASS] != ELFCLASS32) {
+            std::cerr << "Error: Architecture mismatch. Expected 32-bit ELF for ISA " << expected_isa << std::endl;
+            return false;
+        }
+    } else if (expected_isa.find("RV64") != std::string::npos) {
+        if (ehdr.e_ident[EI_CLASS] != ELFCLASS64) {
+            std::cerr << "Error: Architecture mismatch. Expected 64-bit ELF for ISA " << expected_isa << std::endl;
+            return false;
+        }
+        std::cerr << "Error: Simulator currently only supports RV32I. Cannot load 64-bit ELF." << std::endl;
+        return false;
+    }
+
+    if (ehdr.e_machine != EM_RISCV) {
+        std::cerr << "Error: Not a RISC-V ELF file" << std::endl;
         return false;
     }
 
