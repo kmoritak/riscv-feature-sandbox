@@ -12,6 +12,7 @@ public:
     void reset();
     void step();
 
+    void set_pc(uint32_t new_pc) { pc = new_pc; }
     uint32_t get_pc() const { return pc; }
     uint32_t get_reg(uint32_t i) const { return (i == 0) ? 0 : regs[i]; }
 

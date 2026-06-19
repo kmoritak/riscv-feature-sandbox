@@ -31,14 +31,13 @@ make
 ### Running the Simulator
 Once built, you can run the simulator.
 
-**Running the built-in dummy program:**
-If you execute the simulator without any arguments, it will automatically run a built-in test program that executes a few simple instructions and prints the final state of the registers.
+**Running an ELF file:**
+The simulator requires exactly one argument: the path to a 32-bit RISC-V ELF file. It will load the executable segments into memory, set the PC to the entry point, and begin execution. The simulator will output a rich execution trace for debugging.
 ```bash
-./riscv_simulator
+./riscv_simulator path/to/your/program.elf
 ```
 
-**Running an external binary:**
-You can also provide a raw binary file to load into the simulator's memory and execute:
+To compile a test program for the simulator using the included GNU toolchain (once built):
 ```bash
-./riscv_simulator path/to/your/program.bin
+riscv32-unknown-elf-gcc -nostdlib -nostartfiles -Ttext=0x10000 test.s -o test.elf
 ```
