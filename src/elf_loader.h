@@ -8,7 +8,7 @@
 
 class ELFLoader {
 public:
-    static bool load(const std::string& filename, Memory& mem, uint32_t& entry_point);
+    static bool load(const std::string& filename, Memory& mem, uint32_t& entry_point, const std::string& expected_isa);
 };
 
 #endif // ELF_LOADER_H

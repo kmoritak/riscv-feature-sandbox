@@ -5,16 +5,30 @@
 
 int main(int argc, char* argv[]) {
     if (argc < 2) {
-        std::cerr << "Usage: " << argv[0] << " <elf_file> [ISA_ARGS...]" << std::endl;
+        std::cerr << "Usage: " << argv[0] << " <elf_file> [--isa=<ISA>]" << std::endl;
         return 1;
+    }
+
+    std::string elf_file = argv[1];
+    std::string isa = "RV32I"; // Default ISA
+
+    // Parse CLI arguments
+    for (int i = 2; i < argc; ++i) {
+        std::string arg = argv[i];
+        if (arg.rfind("--isa=", 0) == 0) {
+            isa = arg.substr(6);
+        } else {
+            std::cerr << "Unknown argument: " << arg << std::endl;
+            return 1;
+        }
     }
 
     // Initialize 16MB of memory
     Memory mem(16 * 1024 * 1024);
-    CPU cpu(mem);
+    CPU cpu(mem, isa);
 
     uint32_t entry_point = 0;
-    if (!ELFLoader::load(argv[1], mem, entry_point)) {
+    if (!ELFLoader::load(elf_file, mem, entry_point, isa)) {
         return 1;
     }
 

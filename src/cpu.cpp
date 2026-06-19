@@ -2,7 +2,7 @@
 #include <iostream>
 #include <iomanip>
 
-CPU::CPU(Memory& memory) : pc(0), mem(memory) {
+CPU::CPU(Memory& memory, const std::string& isa) : pc(0), mem(memory), current_isa(isa) {
     regs.fill(0);
 }
 
