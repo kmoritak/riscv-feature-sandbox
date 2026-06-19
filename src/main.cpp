@@ -4,8 +4,8 @@
 #include <iostream>
 
 int main(int argc, char* argv[]) {
-    if (argc != 2) {
-        std::cerr << "Usage: " << argv[0] << " <elf_file>" << std::endl;
+    if (argc < 2) {
+        std::cerr << "Usage: " << argv[0] << " <elf_file> [ISA_ARGS...]" << std::endl;
         return 1;
     }
 
